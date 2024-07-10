@@ -15,7 +15,7 @@ namespace EMUAdditions
     {
         internal static bool doUnlockTest = false;
         internal static bool doResourcePlusTest = false;
-        internal static bool doMachineTest = true;
+        internal static bool doMachineTest = false;
 
         public static void DoTests() {
             if (doUnlockTest) {
