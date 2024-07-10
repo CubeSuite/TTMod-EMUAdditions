@@ -68,7 +68,6 @@ namespace EMUAdditions
             }
 
             if (doMachineTest) {
-
                 NewResourceDetails details = new NewResourceDetails() {
                     name = "Void Chest",
                     description = "Voids all items inserted into it.",
@@ -162,7 +161,7 @@ namespace EMUAdditions
             if (Testing.doMachineTest) {
                 ChestDefinition voidChestDefinition = (ChestDefinition)ModUtils.GetResourceInfoByName("Void Chest");
                 voidChestDefinition.inventorySizes = new List<Vector2Int>() { new Vector2Int(1, 1) };
-                voidChestDefinition.invSizeOutput = new Vector2Int(1, 1);T 
+                voidChestDefinition.invSizeOutput = new Vector2Int(1, 1);
             }
         }
 

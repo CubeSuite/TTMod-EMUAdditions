@@ -21,8 +21,6 @@ namespace EMUAdditions.ContentAdders
         internal static Dictionary<string, int> idHistory = new Dictionary<string, int>();
         private static string dataFolder => EMUAdditionsPlugin.dataFolder;
 
-        private const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
         // Internal Functions
 
         internal static void AddHistoricMachines() {
@@ -36,18 +34,8 @@ namespace EMUAdditions.ContentAdders
 
                 BuilderInfo parent = (BuilderInfo)ModUtils.GetResourceInfoByNameUnsafe(machineDetails.parentName);
                 ModUtils.CloneObject(parent, ref machine);
-                machine.craftingMethod = machineDetails.craftingMethod;
-                machine.craftTierRequired = machineDetails.craftTierRequired;
-                machine.description = machineDetails.description;
-                machine.maxStackCount = machineDetails.maxStackCount;
+                
                 machine.rawName = machineDetails.name;
-                machine.rawSprite = machineDetails.sprite;
-                machine.sortPriority = machineDetails.sortPriority;
-
-                if (!string.IsNullOrEmpty(machineDetails.subHeaderTitle)) {
-                    machine.headerType = ModUtils.GetSchematicsSubHeaderByTitle(machineDetails.headerTitle, machineDetails.subHeaderTitle);
-                }
-
                 machine.uniqueId = idHistory[machine.displayName];
 
                 AddMachineToGame(machine);
@@ -66,18 +54,8 @@ namespace EMUAdditions.ContentAdders
 
                 BuilderInfo parent = (BuilderInfo)ModUtils.GetResourceInfoByNameUnsafe(machineDetails.parentName);
                 ModUtils.CloneObject(parent, ref machine);
-                machine.craftingMethod = machineDetails.craftingMethod;
-                machine.craftTierRequired = machineDetails.craftTierRequired;
-                machine.description = machineDetails.description;
-                machine.maxStackCount = machineDetails.maxStackCount;
+                
                 machine.rawName = machineDetails.name;
-                machine.rawSprite = machineDetails.sprite;
-                machine.sortPriority = machineDetails.sortPriority;
-
-                if (!string.IsNullOrEmpty(machineDetails.subHeaderTitle)) {
-                    machine.headerType = ModUtils.GetSchematicsSubHeaderByTitle(machineDetails.headerTitle, machineDetails.subHeaderTitle);
-                }
-
                 machine.uniqueId = GetNewMachineID();
                 idHistory.Add(machine.displayName, machine.uniqueId);
 
@@ -94,13 +72,17 @@ namespace EMUAdditions.ContentAdders
             int index = machinesToAdd.IndexOf(machineDefinition);
             NewResourceDetails machineDetails = details[index];
             ResourceInfo parent = ModUtils.GetResourceInfoByNameUnsafe(machineDetails.parentName);
+            
+            machineDefinition.craftingMethod = machineDetails.craftingMethod;
+            machineDefinition.craftTierRequired = machineDetails.craftTierRequired;
+            machineDefinition.description = machineDetails.description;
+            machineDefinition.maxStackCount = machineDetails.maxStackCount;
+            machineDefinition.rawName = machineDetails.name;
+            machineDefinition.rawSprite = machineDetails.sprite;
+            machineDefinition.sortPriority = machineDetails.sortPriority;
 
-            if (machineDefinition.headerType == null) {
-                machineDefinition.headerType = parent.headerType;
-            }
-
-            if (machineDefinition.headerType == null) {
-                machineDefinition.headerType = parent.headerType;
+            if (!string.IsNullOrEmpty(machineDetails.subHeaderTitle)) {
+                machineDefinition.headerType = ModUtils.GetSchematicsSubHeaderByTitle(machineDetails.headerTitle, machineDetails.subHeaderTitle);
             }
 
             machineDefinition.unlock = ModUtils.GetUnlockByNameUnsafe(machineDetails.unlockName);
@@ -110,15 +92,6 @@ namespace EMUAdditions.ContentAdders
 
             if (machineDefinition.sprite == null) {
                 machineDefinition.rawSprite = parent.sprite;
-            }
-
-            if (machineDefinition.model3D == null) {
-                FieldInfo model3DInfo = parent.GetType().GetField("model3D", flags);
-                machineDefinition.model3D = (GameObject)model3DInfo.GetValue(parent);
-            }
-
-            if (machineDefinition.rawConveyorResourcePrefab == null) {
-                machineDefinition.rawConveyorResourcePrefab = parent.rawConveyorResourcePrefab;
             }
 
             string displayNameHash = LocsUtility.GetHashString(machineDefinition.displayName);
