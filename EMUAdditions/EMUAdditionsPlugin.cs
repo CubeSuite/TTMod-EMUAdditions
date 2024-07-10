@@ -68,7 +68,6 @@ namespace EMUAdditions
             }
 
             if (doMachineTest) {
-
                 NewResourceDetails details = new NewResourceDetails() {
                     name = "Void Chest",
                     description = "Voids all items inserted into it.",
