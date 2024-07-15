@@ -1,4 +1,4 @@
-﻿using EMUAdditions.ContentAdders;
+﻿using EquinoxsModUtils.Additions.ContentAdders;
 using EquinoxsModUtils;
 using HarmonyLib;
 using System;
@@ -7,11 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMUAdditions.Patches
+namespace EquinoxsModUtils.Additions.Patches
 {
     internal class GameDefinesPatch
     {
-        private static bool loadedCustomData = false;
+        public static bool loadedCustomData = false;
+        public static bool isFirstLoad = true;
 
         [HarmonyPatch(typeof(GameDefines), "GetMaxResId")]
         [HarmonyPrefix]
@@ -28,6 +29,8 @@ namespace EMUAdditions.Patches
             RecipeAdder.AddRegisteredRecipes();
 
             ModUtils.SetPrivateStaticField("_topResId", GameDefines.instance, -1);
+
+            isFirstLoad = false;
         }
     }
 }

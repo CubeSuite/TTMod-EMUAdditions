@@ -1,15 +1,15 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
-using EMUAdditions.ContentAdders;
-using EMUAdditions.Patches;
+using EquinoxsModUtils.Additions.ContentAdders;
+using EquinoxsModUtils.Additions.Patches;
 using EquinoxsModUtils;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMUAdditions
+namespace EquinoxsModUtils.Additions
 {
     internal static class Testing 
     {
@@ -198,6 +198,7 @@ namespace EMUAdditions
         // Private Functions
 
         private void ApplyPatches() {
+            Harmony.CreateAndPatchAll(typeof(FlowManagerPatch));
             Harmony.CreateAndPatchAll(typeof(GameDefinesPatch));
             Harmony.CreateAndPatchAll(typeof(LocsUtilityPatch));
         }

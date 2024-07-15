@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace EMUAdditions.ContentAdders
+namespace EquinoxsModUtils.Additions.ContentAdders
 {
     internal static class UnlockAdder
     {
