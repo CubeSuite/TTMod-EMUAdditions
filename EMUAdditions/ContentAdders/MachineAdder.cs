@@ -1,4 +1,5 @@
-﻿using EquinoxsModUtils;
+﻿using EquinoxsModUtils.Additions.Patches;
+using EquinoxsModUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +11,7 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using static RootMotion.Demos.Turret;
 
-namespace EMUAdditions.ContentAdders
+namespace EquinoxsModUtils.Additions.ContentAdders
 {
     internal static class MachineAdder
     {
@@ -94,10 +95,12 @@ namespace EMUAdditions.ContentAdders
                 machineDefinition.rawSprite = parent.sprite;
             }
 
-            string displayNameHash = LocsUtility.GetHashString(machineDefinition.displayName);
-            string descriptionHash = LocsUtility.GetHashString(machineDefinition.description);
-            EMUAdditionsPlugin.customTranslations.Add(displayNameHash, machineDefinition.rawName);
-            EMUAdditionsPlugin.customTranslations.Add(descriptionHash, machineDefinition.description);
+            if (GameDefinesPatch.isFirstLoad) {
+                string displayNameHash = LocsUtility.GetHashString(machineDefinition.displayName);
+                string descriptionHash = LocsUtility.GetHashString(machineDefinition.description);
+                EMUAdditionsPlugin.customTranslations.Add(displayNameHash, machineDefinition.rawName);
+                EMUAdditionsPlugin.customTranslations.Add(descriptionHash, machineDefinition.description);
+            }
 
             GameDefines.instance.resources.Add(machineDefinition);
             GameDefines.instance.buildableResources.Add((BuilderInfo)machineDefinition);

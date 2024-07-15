@@ -1,4 +1,5 @@
-﻿using EquinoxsModUtils;
+﻿using EquinoxsModUtils.Additions.Patches;
+using EquinoxsModUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace EMUAdditions.ContentAdders
+namespace EquinoxsModUtils.Additions.ContentAdders
 {
     internal static class ResourceAdder
     {
@@ -102,11 +103,12 @@ namespace EMUAdditions.ContentAdders
             resource.model3D = parent.model3D;
             resource.rawConveyorResourcePrefab = parent.rawConveyorResourcePrefab;
 
-            string nameHash = LocsUtility.GetHashString(details.name);
-            string descriptionHash = LocsUtility.GetHashString(details.description);
-
-            EMUAdditionsPlugin.customTranslations.Add(nameHash, details.name);
-            EMUAdditionsPlugin.customTranslations.Add(descriptionHash, details.description);
+            if (GameDefinesPatch.isFirstLoad) {
+                string nameHash = LocsUtility.GetHashString(details.name);
+                string descriptionHash = LocsUtility.GetHashString(details.description);
+                EMUAdditionsPlugin.customTranslations.Add(nameHash, details.name);
+                EMUAdditionsPlugin.customTranslations.Add(descriptionHash, details.description);
+            }
 
             GameDefines.instance.resources.Add(resource);
             ResourceNames.SafeResources.Add(resource.displayName);

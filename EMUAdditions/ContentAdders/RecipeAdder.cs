@@ -1,4 +1,5 @@
-﻿using EquinoxsModUtils;
+﻿using EquinoxsModUtils.Additions.Patches;
+using EquinoxsModUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMUAdditions.ContentAdders
+namespace EquinoxsModUtils.Additions.ContentAdders
 {
     internal static class RecipeAdder
     {

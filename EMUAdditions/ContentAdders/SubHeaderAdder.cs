@@ -1,18 +1,22 @@
-﻿using EquinoxsModUtils;
+﻿using EquinoxsModUtils.Additions.Patches;
+using EquinoxsModUtils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
-namespace EMUAdditions.ContentAdders
+namespace EquinoxsModUtils.Additions.ContentAdders
 {
     internal static class SubHeaderAdder
     {
         // Objects & Variables
         internal static List<SchematicsSubHeader> subHeadersToAdd = new List<SchematicsSubHeader>();
+        internal static List<string> parents = new List<string>();
         internal static Dictionary<string, int> idHistory = new Dictionary<string, int>();
         private static string dataFolder => EMUAdditionsPlugin.dataFolder;
 
@@ -24,6 +28,10 @@ namespace EMUAdditions.ContentAdders
             List<SchematicsSubHeader> addedBefore = subHeadersToAdd.Where(subHeader => idHistory.ContainsKey(subHeader.title)).ToList();
             foreach(SchematicsSubHeader subHeader in addedBefore) {
                 EMUAdditionsPlugin.LogInfo($"Trying to add historic new SchematicsSubHeader '{subHeader.title}'");
+                
+                SchematicsSubHeader clone = ScriptableObject.CreateInstance<SchematicsSubHeader>();
+                ModUtils.CloneObject(subHeader, ref clone);
+
                 subHeader.uniqueId = idHistory[subHeader.title];
                 if (AddSubHeaderToGame(subHeader)) {
                     EMUAdditionsPlugin.LogInfo($"Added historic new SchematicsSubHeader '{subHeader.title}' to the game with id {subHeader.uniqueId}");
@@ -33,10 +41,14 @@ namespace EMUAdditions.ContentAdders
             List<SchematicsSubHeader> neverAdded = subHeadersToAdd.Where(subHeader => !idHistory.ContainsKey(subHeader.title)).ToList();
             foreach(SchematicsSubHeader subHeader in neverAdded) {
                 EMUAdditionsPlugin.LogInfo($"Trying to add brand new SchematicsSubHeader '{subHeader.title}'");
-                subHeader.uniqueId = GetNewSubHeaderID();
-                idHistory.Add(subHeader.title, subHeader.uniqueId);
-                if (AddSubHeaderToGame(subHeader)) {
-                    EMUAdditionsPlugin.LogInfo($"Added brand new SchematicsSubHeader '{subHeader.title}' to the game with id {subHeader.uniqueId}");
+                
+                SchematicsSubHeader clone = ScriptableObject.CreateInstance<SchematicsSubHeader>();
+                ModUtils.CloneObject(subHeader, ref clone);
+                
+                clone.uniqueId = GetNewSubHeaderID();
+                idHistory.Add(clone.title, clone.uniqueId);
+                if (AddSubHeaderToGame(clone)) {
+                    EMUAdditionsPlugin.LogInfo($"Added brand new SchematicsSubHeader '{clone.title}' to the game with id {clone.uniqueId}");
                 }
             }
 
@@ -46,15 +58,20 @@ namespace EMUAdditions.ContentAdders
         // Private Functions
 
         private static bool AddSubHeaderToGame(SchematicsSubHeader subHeader) {
-            string[] titleParts = subHeader.title.Split('/');
+            int index = subHeadersToAdd.IndexOf(subHeader);
+            string parentTitle = parents[index];
 
-            subHeader.filterTag = ModUtils.GetSchematicsHeaderByTitle(titleParts[0]);
+            subHeader.filterTag = ModUtils.GetSchematicsHeaderByTitle(parentTitle);
             if (subHeader.filterTag == null) {
                 EMUAdditionsPlugin.LogError($"Aborting attempt to add new SchematicsSubHeader '{subHeader.title}'");
                 return false;
             }
 
-            subHeader.title = titleParts[1];
+            if (GameDefinesPatch.isFirstLoad) {
+                string titleHash = LocsUtility.GetHashString(subHeader.title);
+                EMUAdditionsPlugin.customTranslations.Add(titleHash, subHeader.title);
+            }
+
             GameDefines.instance.schematicsSubHeaderEntries.Add(subHeader);
             return true;
         }

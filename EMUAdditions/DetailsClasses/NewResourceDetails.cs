@@ -1,4 +1,4 @@
-﻿using EMUAdditions.ContentAdders;
+﻿using EquinoxsModUtils.Additions.ContentAdders;
 using EquinoxsModUtils;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace EMUAdditions
+namespace EquinoxsModUtils.Additions
 {
     public class NewResourceDetails
     {

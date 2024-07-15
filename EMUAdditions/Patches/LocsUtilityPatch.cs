@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMUAdditions.Patches
+namespace EquinoxsModUtils.Additions.Patches
 {
     internal class LocsUtilityPatch
     {

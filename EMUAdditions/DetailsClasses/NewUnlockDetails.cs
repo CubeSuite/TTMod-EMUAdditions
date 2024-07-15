@@ -1,14 +1,12 @@
-﻿using ArchieAndrews.PrefabBrush;
-using EMUAdditions.ContentAdders;
+﻿using EquinoxsModUtils.Additions.ContentAdders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace EMUAdditions
+namespace EquinoxsModUtils.Additions
 {
     public class NewUnlockDetails
     {

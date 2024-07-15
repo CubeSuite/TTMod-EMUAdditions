@@ -76,6 +76,7 @@
     <Compile Include="DetailsClasses\NewUnlockDetails.cs" />
     <Compile Include="EMUAdditions.cs" />
     <Compile Include="EMUAdditionsPlugin.cs" />
+    <Compile Include="Patches\FlowManagerPatch.cs" />
     <Compile Include="Patches\GameDefinesPatch.cs" />
     <Compile Include="Patches\LocsUtilityPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

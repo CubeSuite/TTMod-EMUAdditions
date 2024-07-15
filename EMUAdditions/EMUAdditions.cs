@@ -1,4 +1,4 @@
-﻿using EMUAdditions.ContentAdders;
+﻿using EquinoxsModUtils.Additions.ContentAdders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace EMUAdditions
+namespace EquinoxsModUtils.Additions
 {
     public static partial class EMUAdditions
     {
@@ -78,9 +78,10 @@ namespace EMUAdditions
             }
 
             SchematicsSubHeader subHeader = (SchematicsSubHeader)ScriptableObject.CreateInstance(typeof(SchematicsSubHeader));
-            subHeader.title = $"{parentTitle}/{title}";
+            subHeader.title = $"{title}";
             subHeader.priority = priority;
             SubHeaderAdder.subHeadersToAdd.Add(subHeader);
+            SubHeaderAdder.parents.Add(parentTitle);
 
             if (shouldLog) EMUAdditionsPlugin.LogInfo($"Successfully registered new SchematicsSubHeader '{parentTitle}/{title}' to be added to game");
         }

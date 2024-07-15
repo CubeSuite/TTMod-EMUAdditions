@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TriangleNet;
 
-namespace EMUAdditions
+namespace EquinoxsModUtils.Additions
 {
     public static partial class EMUAdditions 
     {
