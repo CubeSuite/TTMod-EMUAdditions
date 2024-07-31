@@ -8,6 +8,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace EquinoxsModUtils.Additions
 {
@@ -115,7 +116,7 @@ namespace EquinoxsModUtils.Additions
         // Plugin Settings
         internal const string MyGUID = "com.equinox.EMUAdditions";
         private const string PluginName = "EMUAdditions";
-        private const string VersionString = "1.0.0";
+        private const string VersionString = "1.1.1";
 
         private static readonly Harmony Harmony = new Harmony(MyGUID);
         internal static ManualLogSource Log = new ManualLogSource(PluginName);
@@ -123,6 +124,7 @@ namespace EquinoxsModUtils.Additions
         // Objects & Variables
         internal static Dictionary<string, string> customTranslations = new Dictionary<string, string>();
         internal static string dataFolder = $"{Application.persistentDataPath}/EMUAdditions";
+        internal static Dictionary<string, int> idHistory = new Dictionary<string, int>();
 
         // Unity Functions
 
@@ -131,17 +133,15 @@ namespace EquinoxsModUtils.Additions
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loading...");
             Harmony.PatchAll();
 
+            LoadIdHistory();
             UnlockAdder.LoadIdHistory();
-            ResourceAdder.LoadIdHistory();
             RecipeAdder.LoadIdHistory();
             SubHeaderAdder.LoadIdHistory();
-            MachineAdder.LoadIdHistory();
 
             ApplyPatches();
 
             ModUtils.GameDefinesLoaded += OnGameDefinesLoaded;
             ModUtils.SaveStateLoaded += OnSaveStateLoaded;
-            ModUtils.GameLoaded += OnGameLoaded;
             ModUtils.GameSaved += OnGameSaved;
 
             Testing.DoTests();
@@ -167,10 +167,9 @@ namespace EquinoxsModUtils.Additions
 
         private void OnSaveStateLoaded(object sender, EventArgs e) {
             EMUAdditions.CustomData.Load(SaveState.instance.metadata.worldName);
-        }
-
-        private void OnGameLoaded(object sender, EventArgs e) {
-            
+            RecipeAdder.FetchUnlocks();
+            ResourceAdder.FetchUnlocks();
+            MachineAdder.FetchUnlocks();
         }
 
         private void OnGameSaved(object sender, EventArgs e) {
@@ -201,6 +200,31 @@ namespace EquinoxsModUtils.Additions
             Harmony.CreateAndPatchAll(typeof(FlowManagerPatch));
             Harmony.CreateAndPatchAll(typeof(GameDefinesPatch));
             Harmony.CreateAndPatchAll(typeof(LocsUtilityPatch));
+        }
+
+        internal static void SaveIdHistory() {
+            Directory.CreateDirectory(dataFolder);
+            List<string> fileLines = new List<string>();
+            foreach(KeyValuePair<string, int> pair in idHistory) {
+                fileLines.Add($"{pair.Key}|{pair.Value}");
+            }
+
+            string saveFile = $"{dataFolder}/Id History.txt";
+            File.WriteAllLines(saveFile, fileLines);
+        }
+
+        private void LoadIdHistory() {
+            string saveFile = $"{dataFolder}/Id History.txt";
+            if(!File.Exists(saveFile)) {
+                LogWarning($"No Id History save file found");
+                return;
+            }
+
+            string[] fileLines = File.ReadAllLines(saveFile);
+            foreach(string line in fileLines) {
+                string[] parts = line.Split('|');
+                idHistory.Add(parts[0], int.Parse(parts[1]));
+            }
         }
     }
 }

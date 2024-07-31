@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace EquinoxsModUtils.Additions.ContentAdders
 {
@@ -31,10 +32,11 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             }
             
             List<NewRecipeDetails> neverAdded = recipesToAdd.Where(recipe => !idHistory.ContainsKey(recipe.GetUniqueName())).ToList();
-            foreach( NewRecipeDetails details in neverAdded) {
+            foreach (NewRecipeDetails details in neverAdded) {
                 SchematicsRecipeData recipe = details.ConvertToRecipe();
                 recipe.uniqueId = GetNewRecipeID();
                 idHistory.Add(details.GetUniqueName(), recipe.uniqueId);
+
                 AddRecipeToGame(details, ref recipe);
 
                 EMUAdditionsPlugin.LogInfo($"Added brand new Recipe '{details.GetUniqueName()}' to the game with id {recipe.uniqueId}");
@@ -43,18 +45,31 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             SaveIdHistory();
         }
 
+        internal static void FetchUnlocks() {
+            foreach (NewRecipeDetails details in recipesToAdd) {
+                if (string.IsNullOrEmpty(details.unlockName)) continue;
+
+                List<int> ingredients = new List<int>();
+                List<int> outputs = new List<int>();
+
+                foreach (RecipeResourceInfo ingredient in details.ingredients) {
+                    ingredients.Add(ModUtils.GetResourceIDByName(ingredient.name));
+                }
+
+                foreach (RecipeResourceInfo output in details.outputs) {
+                    outputs.Add(ModUtils.GetResourceIDByName(output.name));
+                }
+
+                SchematicsRecipeData recipe = ModUtils.TryFindRecipe(ingredients, outputs);
+                if (recipe == null || recipe.unlock != null) continue;
+
+                recipe.unlock = ModUtils.GetUnlockByName(details.unlockName);
+            }
+        }
+
         // Private Functions
 
         private static void AddRecipeToGame(NewRecipeDetails details, ref SchematicsRecipeData recipe) {
-            if (!string.IsNullOrEmpty(details.unlockName)) {
-                recipe.unlock = ModUtils.GetUnlockByNameUnsafe(details.unlockName);
-            }
-
-            if (recipe.unlock == null) {
-                EMUAdditionsPlugin.LogWarning($"NewRecipeDetails '{details.GetUniqueName()}' unlock is null, using outputs[0]'s instead.");
-                recipe.unlock = recipe.outputTypes[0].unlock;
-            }
-
             GameDefines.instance.schematicsRecipeEntries.Add(recipe);
         }
 

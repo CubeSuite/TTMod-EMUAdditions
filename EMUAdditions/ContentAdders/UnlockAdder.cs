@@ -110,7 +110,6 @@ namespace EquinoxsModUtils.Additions.ContentAdders
         }
 
         private static int GetNewUnlockID() {
-            // ToDo: test GameDefines.instance.unlocks.Last().uniqueId + 1;
             int max = 0;
             for(int i = 0; i < GameDefines.instance.unlocks.Count; i++) {
                 if (GameDefines.instance.unlocks[i].uniqueId > max) {
@@ -151,7 +150,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
         internal static void SaveIdHistory() {
             Directory.CreateDirectory(dataFolder);
             List<string> filesLines = new List<string>();
-            foreach(KeyValuePair<string, int> pair in idHistory) {
+            foreach (KeyValuePair<string, int> pair in idHistory) {
                 filesLines.Add($"{pair.Key}|{pair.Value}");
             }
 
@@ -167,7 +166,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             }
 
             string[] fileLines = File.ReadAllLines(saveFile);
-            foreach(string line in fileLines) {
+            foreach (string line in fileLines) {
                 string[] parts = line.Split('|');
                 idHistory.Add(parts[0], int.Parse(parts[1]));
             }

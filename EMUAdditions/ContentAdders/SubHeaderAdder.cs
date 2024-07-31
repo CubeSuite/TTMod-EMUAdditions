@@ -29,9 +29,6 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             foreach(SchematicsSubHeader subHeader in addedBefore) {
                 EMUAdditionsPlugin.LogInfo($"Trying to add historic new SchematicsSubHeader '{subHeader.title}'");
                 
-                SchematicsSubHeader clone = ScriptableObject.CreateInstance<SchematicsSubHeader>();
-                ModUtils.CloneObject(subHeader, ref clone);
-
                 subHeader.uniqueId = idHistory[subHeader.title];
                 if (AddSubHeaderToGame(subHeader)) {
                     EMUAdditionsPlugin.LogInfo($"Added historic new SchematicsSubHeader '{subHeader.title}' to the game with id {subHeader.uniqueId}");
@@ -42,13 +39,10 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             foreach(SchematicsSubHeader subHeader in neverAdded) {
                 EMUAdditionsPlugin.LogInfo($"Trying to add brand new SchematicsSubHeader '{subHeader.title}'");
                 
-                SchematicsSubHeader clone = ScriptableObject.CreateInstance<SchematicsSubHeader>();
-                ModUtils.CloneObject(subHeader, ref clone);
-                
-                clone.uniqueId = GetNewSubHeaderID();
-                idHistory.Add(clone.title, clone.uniqueId);
-                if (AddSubHeaderToGame(clone)) {
-                    EMUAdditionsPlugin.LogInfo($"Added brand new SchematicsSubHeader '{clone.title}' to the game with id {clone.uniqueId}");
+                subHeader.uniqueId = GetNewSubHeaderID();
+                idHistory.Add(subHeader.title, subHeader.uniqueId);
+                if (AddSubHeaderToGame(subHeader)) {
+                    EMUAdditionsPlugin.LogInfo($"Added brand new SchematicsSubHeader '{subHeader.title}' to the game with id {subHeader.uniqueId}");
                 }
             }
 
@@ -67,10 +61,8 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 return false;
             }
 
-            if (GameDefinesPatch.isFirstLoad) {
-                string titleHash = LocsUtility.GetHashString(subHeader.title);
-                EMUAdditionsPlugin.customTranslations.Add(titleHash, subHeader.title);
-            }
+            string titleHash = LocsUtility.GetHashString(subHeader.title);
+            EMUAdditionsPlugin.customTranslations[titleHash] = subHeader.title;
 
             GameDefines.instance.schematicsSubHeaderEntries.Add(subHeader);
             return true;

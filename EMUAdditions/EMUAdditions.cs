@@ -106,5 +106,28 @@ namespace EquinoxsModUtils.Additions
 
             if (shouldLog) EMUAdditionsPlugin.LogInfo($"Successfully registered new Machine '{definition.displayName}' for adding to game");
         }
+
+        /// <summary>
+        /// Registers a new instance of an Equipment to be added to the game at the correct time.
+        /// </summary>
+        /// <param name="equipment">Equipment derived class for the new equipment</param>
+        /// <param name="details">Container for the details of your new equipment</param>
+        /// <param name="shouldLog">Whether an [EMUAdditions] Info message should be logged on success</param>
+        public static void AddNewEquipment<T>(Equipment equipment, NewResourceDetails details, bool shouldLog = false) where T : ScriptableObject {
+            if (!details.Validate()) {
+                EMUAdditionsPlugin.LogError($"Abandoning attempt to add new Equipment '{details.name}'");
+                return;
+            }
+            
+            T info = ScriptableObject.CreateInstance<T>();
+            ModUtils.SetPrivateField("_info", equipment, info);
+            equipment.info.rawName = details.name;
+
+            EquipmentAdder.equipmentToAdd.Add(equipment);
+            EquipmentAdder.details.Add(details);
+
+
+            if (shouldLog) EMUAdditionsPlugin.LogInfo($"Successfully registered new Equipment '{details.name}' for adding to game");
+        }
     }
 }

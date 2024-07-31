@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Reflection.Emit;
 
 namespace EquinoxsModUtils.Additions.ContentAdders
 {
@@ -14,22 +15,20 @@ namespace EquinoxsModUtils.Additions.ContentAdders
     {
         // Objects & Variables
         internal static List<NewResourceDetails> resourcesToAdd = new List<NewResourceDetails>();
-        internal static Dictionary<string, int> idHistory = new Dictionary<string, int>();
+        internal static Dictionary<string, int> idHistory => EMUAdditionsPlugin.idHistory;
         internal static List<int> addedIds = new List<int>();
-        
-        private static string dataFolder => EMUAdditionsPlugin.dataFolder;
 
         // Internal Functions
 
         internal static void AddHistoricResources() {
-            List<NewResourceDetails> addedBefore = resourcesToAdd.Where(details => idHistory.ContainsKey(details.name)).ToList();
+            List<NewResourceDetails> addedBefore = resourcesToAdd.Where(details => idHistory.ContainsKey($"Resource-{details.name}")).ToList();
             EMUAdditionsPlugin.LogInfo($"{addedBefore.Count} historic new Resources have been registered for adding");
 
             for (int i = 0; i < addedBefore.Count; i++) {
                 NewResourceDetails details = addedBefore[i];
 
                 ResourceInfo resource = details.ConvertToResourceInfo();
-                resource.uniqueId = idHistory[resource.displayName];
+                resource.uniqueId = idHistory[$"Resource-{details.name}"];
 
                 AddResourceToGame(details, ref resource);
 
@@ -38,7 +37,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
         }
 
         internal static void AddBrandNewResources() {
-            List<NewResourceDetails> neverAdded = resourcesToAdd.Where(details => !idHistory.ContainsKey(details.name)).ToList();
+            List<NewResourceDetails> neverAdded = resourcesToAdd.Where(details => !idHistory.ContainsKey($"Resource-{details.name}")).ToList();
             EMUAdditionsPlugin.LogInfo($"{neverAdded.Count} brand new Resources have been registered for adding");
             
             for (int i = 0; i < neverAdded.Count; i++) {
@@ -46,13 +45,13 @@ namespace EquinoxsModUtils.Additions.ContentAdders
 
                 ResourceInfo resource = details.ConvertToResourceInfo();
                 resource.uniqueId = GetNewResourceID();
-                idHistory.Add(resource.displayName, resource.uniqueId);
+                idHistory.Add($"Resource-{details.name}", resource.uniqueId);
 
                 AddResourceToGame(details, ref resource);
                 EMUAdditionsPlugin.LogInfo($"Added brand new Resource '{details.name}' to the game with id {resource.uniqueId}");
             }
 
-            SaveIdHistory();
+            EMUAdditionsPlugin.SaveIdHistory();
         }
 
         internal static void FillMissingIds() {
@@ -70,6 +69,17 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 hiddenResoure.headerType = parent.headerType;
 
                 GameDefines.instance.resources.Add(hiddenResoure);
+            }
+        }
+
+        internal static void FetchUnlocks() {
+            foreach(NewResourceDetails details in resourcesToAdd) {
+                if (string.IsNullOrEmpty(details.unlockName)) continue;
+                
+                ResourceInfo resource = ModUtils.GetResourceInfoByName(details.name);
+                if (resource.unlock != null) continue;
+
+                resource.unlock = ModUtils.GetUnlockByName(details.unlockName);
             }
         }
 
@@ -91,11 +101,6 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 resource.headerType = parent.headerType;
             }
 
-            resource.unlock = ModUtils.GetUnlockByNameUnsafe(details.unlockName);
-            if(resource.unlock == null) {
-                resource.unlock = parent.unlock;
-            }
-
             if(resource.sprite == null) {
                 resource.rawSprite = parent.sprite;
             }
@@ -103,12 +108,11 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             resource.model3D = parent.model3D;
             resource.rawConveyorResourcePrefab = parent.rawConveyorResourcePrefab;
 
-            if (GameDefinesPatch.isFirstLoad) {
-                string nameHash = LocsUtility.GetHashString(details.name);
-                string descriptionHash = LocsUtility.GetHashString(details.description);
-                EMUAdditionsPlugin.customTranslations.Add(nameHash, details.name);
-                EMUAdditionsPlugin.customTranslations.Add(descriptionHash, details.description);
-            }
+            string nameHash = LocsUtility.GetHashString(details.name);
+            string descriptionHash = LocsUtility.GetHashString(details.description);
+
+            EMUAdditionsPlugin.customTranslations[nameHash] = details.name;
+            EMUAdditionsPlugin.customTranslations[descriptionHash] = details.description;
 
             GameDefines.instance.resources.Add(resource);
             ResourceNames.SafeResources.Add(resource.displayName);
@@ -126,33 +130,6 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             }
 
             return max + 1;
-        }
-
-        // Data Functions
-
-        private static void SaveIdHistory() {
-            Directory.CreateDirectory(dataFolder);
-            List<string> filesLines = new List<string>();
-            foreach (KeyValuePair<string, int> pair in idHistory) {
-                filesLines.Add($"{pair.Key}|{pair.Value}");
-            }
-
-            string saveFile = $"{dataFolder}/Resource Id History.txt";
-            File.WriteAllLines(saveFile, filesLines);
-        }
-
-        internal static void LoadIdHistory() {
-            string saveFile = $"{dataFolder}/Resource Id History.txt";
-            if (!File.Exists(saveFile)) {
-                EMUAdditionsPlugin.LogWarning($"No Resource Id History save file found");
-                return;
-            }
-
-            string[] fileLines = File.ReadAllLines(saveFile);
-            foreach (string line in fileLines) {
-                string[] parts = line.Split('|');
-                idHistory.Add(parts[0], int.Parse(parts[1]));
-            }
         }
     }
 }

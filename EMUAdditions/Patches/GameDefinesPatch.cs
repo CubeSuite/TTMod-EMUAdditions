@@ -25,6 +25,8 @@ namespace EquinoxsModUtils.Additions.Patches
             MachineAdder.AddHistoricMachines();
             ResourceAdder.AddBrandNewResources();
             MachineAdder.AddBrandNewMachines();
+            EquipmentAdder.AddHistoricEquipment();
+            EquipmentAdder.AddBrandNewEquipment();
             ResourceAdder.FillMissingIds();
             RecipeAdder.AddRegisteredRecipes();
 

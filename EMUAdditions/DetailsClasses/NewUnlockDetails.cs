@@ -65,11 +65,11 @@ namespace EquinoxsModUtils.Additions
             string displayNameHash = LocsUtility.GetHashString(displayName);
             string descriptionHash = LocsUtility.GetHashString(description);
 
-            EMUAdditionsPlugin.customTranslations[displayNameHash] = displayName;
-            EMUAdditionsPlugin.customTranslations[descriptionHash] = description;
-
             unlock.displayNameHash = displayNameHash;
             unlock.descriptionHash = descriptionHash;
+
+            EMUAdditionsPlugin.customTranslations[displayNameHash] = displayName;
+            EMUAdditionsPlugin.customTranslations[descriptionHash] = description;
 
             UnlockAdder.unlockDependencies.Add(displayNameHash, dependencyNames);
             return unlock;
