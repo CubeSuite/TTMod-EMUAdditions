@@ -53,17 +53,17 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 List<int> outputs = new List<int>();
 
                 foreach (RecipeResourceInfo ingredient in details.ingredients) {
-                    ingredients.Add(ModUtils.GetResourceIDByName(ingredient.name));
+                    ingredients.Add(EMU.Resources.GetResourceIDByName(ingredient.name));
                 }
 
                 foreach (RecipeResourceInfo output in details.outputs) {
-                    outputs.Add(ModUtils.GetResourceIDByName(output.name));
+                    outputs.Add(EMU.Resources.GetResourceIDByName(output.name));
                 }
 
-                SchematicsRecipeData recipe = ModUtils.TryFindRecipe(ingredients, outputs);
+                SchematicsRecipeData recipe = EMU.Recipes.TryFindRecipe(ingredients, outputs);
                 if (recipe == null || recipe.unlock != null) continue;
 
-                recipe.unlock = ModUtils.GetUnlockByName(details.unlockName);
+                recipe.unlock = EMU.Unlocks.GetUnlockByName(details.unlockName);
             }
         }
 

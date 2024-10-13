@@ -30,7 +30,7 @@ namespace EquinoxsModUtils.Additions.Patches
             ResourceAdder.FillMissingIds();
             RecipeAdder.AddRegisteredRecipes();
 
-            ModUtils.SetPrivateStaticField("_topResId", GameDefines.instance, -1);
+            EMU.SetPrivateStaticField("_topResId", GameDefines.instance, -1);
 
             isFirstLoad = false;
         }

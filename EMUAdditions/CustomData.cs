@@ -10,6 +10,9 @@ namespace EquinoxsModUtils.Additions
 {
     public static partial class EMUAdditions 
     {
+        /// <summary>
+        /// Use this class to keep track of new members for specific machines
+        /// </summary>
         public static class CustomData 
         {
             // Objects & Variables

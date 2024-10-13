@@ -55,7 +55,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             int index = subHeadersToAdd.IndexOf(subHeader);
             string parentTitle = parents[index];
 
-            subHeader.filterTag = ModUtils.GetSchematicsHeaderByTitle(parentTitle);
+            subHeader.filterTag = EMU.Recipes.GetSchematicsHeaderByTitleUnsafe(parentTitle);
             if (subHeader.filterTag == null) {
                 EMUAdditionsPlugin.LogError($"Aborting attempt to add new SchematicsSubHeader '{subHeader.title}'");
                 return false;

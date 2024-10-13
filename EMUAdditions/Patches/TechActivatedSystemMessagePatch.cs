@@ -23,7 +23,7 @@ namespace EMUAdditions.Patches
                 TechTreeNode node = UIManager.instance.techTreeMenu.GridUI.GetNodeByUnlock(GameDefines.instance.unlocks[0]);
                 EDT.NullCheck(node, "TechTreeNode");
 
-                Sprite defaultSprite = (Sprite)ModUtils.GetPrivateField("iconSprite", node);
+                Sprite defaultSprite = (Sprite)EMU.GetPrivateField("iconSprite", node);
                 EDT.NullCheck(defaultSprite, "defaultSprite");
 
                 __instance.unlock.sprite = defaultSprite;

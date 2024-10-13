@@ -1,4 +1,5 @@
-﻿using EquinoxsModUtils;
+﻿using EquinoxsDebuggingTools;
+using EquinoxsModUtils;
 using FluffyUnderware.DevTools.Extensions;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             List<Unlock> addedBefore = unlocksToAdd.Where(unlock => idHistory.ContainsKey(unlock.displayNameHash)).ToList();
             for (int i = 0; i < addedBefore.Count; i++) {
                 Unlock unlock = addedBefore[i];
-                if (!ModUtils.NullCheck(unlock, $"New Unlock")) continue;
+                if (!EDT.NullCheck(unlock, $"New Unlock")) continue;
                 if (!FindDependencies(ref unlock)) continue;
 
                 unlock.uniqueId = idHistory[unlock.displayNameHash];
@@ -40,7 +41,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             List<Unlock> neverAdded = unlocksToAdd.Where(unlock => !idHistory.ContainsKey(unlock.displayNameHash)).ToList();
             for(int i = 0; i < neverAdded.Count; i++) {
                 Unlock unlock = neverAdded[i];
-                if (!ModUtils.NullCheck(unlock, $"New Unlock")) continue;
+                if (!EDT.NullCheck(unlock, $"New Unlock")) continue;
                 if (!FindDependencies(ref unlock)) continue;
 
                 unlock.uniqueId = GetNewUnlockID();
@@ -128,7 +129,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             List<Unlock> dependencies = new List<Unlock>();
             List<string> dependencyNames = unlockDependencies[unlock.displayNameHash];
             foreach(string unlockName in dependencyNames) {
-                Unlock dependency = ModUtils.GetUnlockByName(unlockName);
+                Unlock dependency = EMU.Unlocks.GetUnlockByName(unlockName);
                 if (dependency != null) {
                     dependencies.Add(dependency);
                 }

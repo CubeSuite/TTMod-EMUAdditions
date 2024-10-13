@@ -26,11 +26,12 @@ namespace EquinoxsModUtils.Additions
                 return false;
             }
 
-            if(coreTypeNeeded != ResearchCoreDefinition.CoreType.Red && 
-               coreTypeNeeded != ResearchCoreDefinition.CoreType.Green) {
-                EMUAdditionsPlugin.LogError($"New Unlock '{displayName}' need to use either Red (Purple in-game) or Green (Blue in-game) cores");
-                return false;
-            }
+            // ToDo: Update this
+            //if(coreTypeNeeded != ResearchCoreDefinition.CoreType.Purple && 
+            //   coreTypeNeeded != ResearchCoreDefinition.CoreType.Green) {
+            //    EMUAdditionsPlugin.LogError($"New Unlock '{displayName}' need to use either Red (Purple in-game) or Green (Blue in-game) cores");
+            //    return false;
+            //}
 
             if (!EMUAdditionsPlugin.IsTranslatableStringUnique(displayName)) {
                 EMUAdditionsPlugin.LogError($"New Unlock displayName '{displayName}' is not unique");

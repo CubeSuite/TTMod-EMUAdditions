@@ -59,7 +59,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 if (addedIds.Contains(id)) continue;
 
                 EMUAdditionsPlugin.LogWarning($"Historic ResourceId {id} has not added been added this launch");
-                ResourceInfo parent = ModUtils.GetResourceInfoByNameUnsafe("SharkRepellant");
+                ResourceInfo parent = EMU.Resources.GetResourceInfoByNameUnsafe("SharkRepellant");
 
                 ResourceInfo hiddenResoure = (ResourceInfo)ScriptableObject.CreateInstance(typeof(ResourceInfo));
                 hiddenResoure.name = "EMU Hidden Resource";
@@ -76,17 +76,17 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             foreach(NewResourceDetails details in resourcesToAdd) {
                 if (string.IsNullOrEmpty(details.unlockName)) continue;
                 
-                ResourceInfo resource = ModUtils.GetResourceInfoByName(details.name);
+                ResourceInfo resource = EMU.Resources.GetResourceInfoByName(details.name);
                 if (resource.unlock != null) continue;
 
-                resource.unlock = ModUtils.GetUnlockByName(details.unlockName);
+                resource.unlock = EMU.Unlocks.GetUnlockByName(details.unlockName);
             }
         }
 
         // Private Functions
 
         private static void AddResourceToGame(NewResourceDetails details, ref ResourceInfo resource) {
-            ResourceInfo parent = ModUtils.GetResourceInfoByNameUnsafe(details.parentName);
+            ResourceInfo parent = EMU.Resources.GetResourceInfoByNameUnsafe(details.parentName);
             if (parent == null) {
                 EMUAdditionsPlugin.LogError($"Could not find parent Resource '{details.parentName}'");
                 EMUAdditionsPlugin.LogError($"Abandoning attempt to add new Resource '{details.name}'");
@@ -94,7 +94,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             }
 
             if (!string.IsNullOrEmpty(details.subHeaderTitle)) {
-                resource.headerType = ModUtils.GetSchematicsSubHeaderByTitle(details.headerTitle, details.subHeaderTitle);
+                resource.headerType = EMU.Recipes.GetSchematicsSubHeaderByTitleUnsafe(details.headerTitle, details.subHeaderTitle);
             }
             
             if(resource.headerType == null) {
@@ -115,7 +115,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             EMUAdditionsPlugin.customTranslations[descriptionHash] = details.description;
 
             GameDefines.instance.resources.Add(resource);
-            ResourceNames.SafeResources.Add(resource.displayName);
+            EMU.Names.Resources.SafeResources.Add(resource.displayName);
             addedIds.Add(resource.uniqueId);
         }
 

@@ -31,8 +31,8 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 int index = machinesToAdd.IndexOf(machine);
                 NewResourceDetails machineDetails = details[index];
 
-                BuilderInfo parent = (BuilderInfo)ModUtils.GetResourceInfoByNameUnsafe(machineDetails.parentName);
-                ModUtils.CloneObject(parent, ref machine);
+                BuilderInfo parent = (BuilderInfo)EMU.Resources.GetResourceInfoByNameUnsafe(machineDetails.parentName);
+                EMU.CloneObject(parent, ref machine);
                 
                 machine.rawName = machineDetails.name;
                 machine.uniqueId = idHistory[$"Machine-{machine.displayName}"];
@@ -51,8 +51,8 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 int index = machinesToAdd.IndexOf(machine);
                 NewResourceDetails machineDetails = details[index];
 
-                BuilderInfo parent = (BuilderInfo)ModUtils.GetResourceInfoByNameUnsafe(machineDetails.parentName);
-                ModUtils.CloneObject(parent, ref machine);
+                BuilderInfo parent = (BuilderInfo)EMU.Resources.GetResourceInfoByNameUnsafe(machineDetails.parentName);
+                EMU.CloneObject(parent, ref machine);
                 
                 machine.rawName = machineDetails.name;
                 machine.uniqueId = GetNewMachineID();
@@ -69,10 +69,10 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             foreach(NewResourceDetails machineDetails in details) {
                 if (string.IsNullOrEmpty(machineDetails.name)) continue;
 
-                ResourceInfo machine = ModUtils.GetResourceInfoByName(machineDetails.name);
+                ResourceInfo machine = EMU.Resources.GetResourceInfoByName(machineDetails.name);
                 if (machine.unlock != null) continue;
 
-                machine.unlock = ModUtils.GetUnlockByName(machineDetails.unlockName);
+                machine.unlock = EMU.Unlocks.GetUnlockByName(machineDetails.unlockName);
             }
         }
 
@@ -81,7 +81,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
         private static void AddMachineToGame(ResourceInfo machineDefinition) {
             int index = machinesToAdd.IndexOf(machineDefinition);
             NewResourceDetails machineDetails = details[index];
-            ResourceInfo parent = ModUtils.GetResourceInfoByNameUnsafe(machineDetails.parentName);
+            ResourceInfo parent = EMU.Resources.GetResourceInfoByNameUnsafe(machineDetails.parentName);
             
             machineDefinition.craftingMethod = machineDetails.craftingMethod;
             machineDefinition.craftTierRequired = machineDetails.craftTierRequired;
@@ -92,7 +92,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             machineDefinition.sortPriority = machineDetails.sortPriority;
 
             if (!string.IsNullOrEmpty(machineDetails.subHeaderTitle)) {
-                machineDefinition.headerType = ModUtils.GetSchematicsSubHeaderByTitle(machineDetails.headerTitle, machineDetails.subHeaderTitle);
+                machineDefinition.headerType = EMU.Recipes.GetSchematicsSubHeaderByTitleUnsafe(machineDetails.headerTitle, machineDetails.subHeaderTitle);
             }
 
             if (machineDefinition.sprite == null) {
@@ -107,7 +107,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
 
             GameDefines.instance.resources.Add(machineDefinition);
             GameDefines.instance.buildableResources.Add((BuilderInfo)machineDefinition);
-            ResourceNames.SafeResources.Add(machineDefinition.displayName);
+            EMU.Names.Resources.SafeResources.Add(machineDefinition.displayName);
             ResourceAdder.addedIds.Add(machineDefinition.uniqueId);
         }
 

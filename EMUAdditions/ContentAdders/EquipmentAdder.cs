@@ -27,9 +27,9 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 int index = equipmentToAdd.IndexOf(equipment);
                 NewResourceDetails equipmentDetails = details[index];
 
-                EquippableResourceInfo parent = (EquippableResourceInfo)ModUtils.GetResourceInfoByNameUnsafe(equipmentDetails.parentName);
+                EquippableResourceInfo parent = (EquippableResourceInfo)EMU.Resources.GetResourceInfoByNameUnsafe(equipmentDetails.parentName);
                 EquippableResourceInfo equipmentInfo = equipment.info;
-                ModUtils.CloneObject(parent, ref equipmentInfo);
+                EMU.CloneObject(parent, ref equipmentInfo);
 
                 equipmentInfo.rawName = equipmentDetails.name;
                 equipmentInfo.uniqueId = idHistory[$"Equipment-{equipmentInfo.displayName}"];
@@ -48,9 +48,9 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 int index = equipmentToAdd.IndexOf(equipment);
                 NewResourceDetails equipmentDetails = details[index];
 
-                EquippableResourceInfo parent = (EquippableResourceInfo)ModUtils.GetResourceInfoByNameUnsafe(equipmentDetails.parentName);
+                EquippableResourceInfo parent = (EquippableResourceInfo)EMU.Resources.GetResourceInfoByNameUnsafe(equipmentDetails.parentName);
                 EquippableResourceInfo equipmentInfo = equipment.info;
-                ModUtils.CloneObject(parent, ref equipmentInfo);
+                EMU.CloneObject(parent, ref equipmentInfo);
 
                 equipmentInfo.rawName = equipmentDetails.name;
                 equipmentInfo.uniqueId = GetNewEquipmentId();
@@ -67,10 +67,10 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             foreach(NewResourceDetails equipmentDetails in details) {
                 if (string.IsNullOrEmpty(equipmentDetails.name)) continue;
 
-                ResourceInfo info = ModUtils.GetResourceInfoByNameUnsafe(equipmentDetails.name);
+                ResourceInfo info = EMU.Resources.GetResourceInfoByNameUnsafe(equipmentDetails.name);
                 if (info.unlock != null) continue;
 
-                info.unlock = ModUtils.GetUnlockByName(equipmentDetails.unlockName);
+                info.unlock = EMU.Unlocks.GetUnlockByName(equipmentDetails.unlockName);
             }
         }
 
@@ -79,7 +79,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
         private static void AddEquipmentToGame(Equipment equipment) {
             int index = equipmentToAdd.IndexOf(equipment);
             NewResourceDetails equipmentDetails = details[index];
-            EquippableResourceInfo parent = (EquippableResourceInfo)ModUtils.GetResourceInfoByNameUnsafe(equipmentDetails.parentName);
+            EquippableResourceInfo parent = (EquippableResourceInfo)EMU.Resources.GetResourceInfoByNameUnsafe(equipmentDetails.parentName);
 
             equipment.info.craftingMethod = equipmentDetails.craftingMethod;
             equipment.info.craftTierRequired = equipmentDetails.craftTierRequired;
@@ -90,7 +90,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             equipment.info.sortPriority = equipmentDetails.sortPriority;
 
             if (!string.IsNullOrEmpty(equipmentDetails.subHeaderTitle)) {
-                equipment.info.headerType = ModUtils.GetSchematicsSubHeaderByTitle(equipmentDetails.headerTitle, equipmentDetails.subHeaderTitle);
+                equipment.info.headerType = EMU.Recipes.GetSchematicsSubHeaderByTitleUnsafe(equipmentDetails.headerTitle, equipmentDetails.subHeaderTitle);
             }
 
             if (equipment.info.sprite == null) {
@@ -104,11 +104,11 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             EMUAdditionsPlugin.customTranslations[descriptionHash] = equipment.info.description;
 
             GameDefines.instance.resources.Add(equipment.info);
-            ResourceNames.SafeResources.Add(equipment.info.displayName);
+            EMU.Names.Resources.SafeResources.Add(equipment.info.displayName);
             
-            Dictionary<ResourceInfo, Equipment> equipmentLookup = (Dictionary<ResourceInfo, Equipment>)ModUtils.GetPrivateField("equipmentLookup", Player.instance.equipment);
+            Dictionary<ResourceInfo, Equipment> equipmentLookup = (Dictionary<ResourceInfo, Equipment>)EMU.GetPrivateField("equipmentLookup", Player.instance.equipment);
             equipmentLookup.Add(equipment.info, equipment);
-            ModUtils.SetPrivateField("equipmentLookup", Player.instance.equipment, equipmentLookup);
+            EMU.SetPrivateField("equipmentLookup", Player.instance.equipment, equipmentLookup);
             EMUAdditionsPlugin.LogInfo($"Registered {equipment.info.displayName} with Player.instance.equipment");
             ResourceAdder.addedIds.Add(equipment.info.uniqueId);
         }

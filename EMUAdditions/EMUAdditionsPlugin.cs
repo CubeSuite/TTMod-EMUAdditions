@@ -18,14 +18,14 @@ namespace EquinoxsModUtils.Additions
         internal static bool doResourcePlusTest = false;
         internal static bool doMachineTest = false;
 
-        public static void DoTests() {
+        internal static void DoTests() {
             if (doUnlockTest) {
                 EMUAdditions.AddNewUnlock(new NewUnlockDetails() {
                     displayName = "Test Unlock 3",
                     description = "Third new test unlock",
                     category = Unlock.TechCategory.Terraforming,
                     requiredTier = TechTreeState.ResearchTier.Tier2,
-                    coreTypeNeeded = ResearchCoreDefinition.CoreType.Red,
+                    coreTypeNeeded = ResearchCoreDefinition.CoreType.Purple,
                     coreCountNeeded = 3,
                     treePosition = 10,
                 });
@@ -33,7 +33,7 @@ namespace EquinoxsModUtils.Additions
 
             if (doResourcePlusTest) {
                 EMUAdditions.AddNewResource(new NewResourceDetails() {
-                    parentName = ResourceNames.Limestone,
+                    parentName = EMU.Names.Resources.Limestone,
 
                     name = "Limestone 3",
                     description = "Limestone 3 Test",
@@ -43,7 +43,7 @@ namespace EquinoxsModUtils.Additions
                     craftTierRequired = 0,
                     fuelAmount = 100f,
                     sortPriority = 10,
-                    unlockName = UnlockNames.BasicManufacturing,
+                    unlockName = EMU.Names.Unlocks.BasicManufacturing,
                 });
                 EMUAdditions.AddNewRecipe(new NewRecipeDetails() {
                     GUID = EMUAdditionsPlugin.MyGUID,
@@ -52,7 +52,7 @@ namespace EquinoxsModUtils.Additions
                     duration = 0.1f,
                     ingredients = new List<RecipeResourceInfo>() {
                         new RecipeResourceInfo() {
-                            name = ResourceNames.Limestone,
+                            name = EMU.Names.Resources.Limestone,
                             quantity = 2
                         }
                     },
@@ -63,7 +63,7 @@ namespace EquinoxsModUtils.Additions
                         }
                     },
                     sortPriority = 10,
-                    unlockName = UnlockNames.BasicManufacturing
+                    unlockName = EMU.Names.Unlocks.BasicManufacturing
                 });
                 EMUAdditions.AddNewSchematicsSubHeader("Test Parts 2", "Intermediates", 10);
             }
@@ -78,8 +78,8 @@ namespace EquinoxsModUtils.Additions
                     subHeaderTitle = "Utility",
                     maxStackCount = 500,
                     sortPriority = 999,
-                    unlockName = UnlockNames.BasicLogistics,
-                    parentName = ResourceNames.Container
+                    unlockName = EMU.Names.Unlocks.BasicLogistics,
+                    parentName = EMU.Names.Resources.Container
                 };
 
                 ChestDefinition definition;
@@ -93,7 +93,7 @@ namespace EquinoxsModUtils.Additions
                     duration = 0.1f,
                     ingredients = new List<RecipeResourceInfo>() {
                         new RecipeResourceInfo() {
-                            name = ResourceNames.IronIngot,
+                            name = EMU.Names.Resources.IronIngot,
                             quantity = 10
                         }
                     },
@@ -104,7 +104,7 @@ namespace EquinoxsModUtils.Additions
                         }
                     },
                     sortPriority = 10,
-                    unlockName = UnlockNames.BasicLogistics
+                    unlockName = EMU.Names.Unlocks.BasicLogistics
                 });
             }
         }
@@ -116,7 +116,7 @@ namespace EquinoxsModUtils.Additions
         // Plugin Settings
         internal const string MyGUID = "com.equinox.EMUAdditions";
         private const string PluginName = "EMUAdditions";
-        private const string VersionString = "1.1.1";
+        private const string VersionString = "2.0.0";
 
         private static readonly Harmony Harmony = new Harmony(MyGUID);
         internal static ManualLogSource Log = new ManualLogSource(PluginName);
@@ -140,26 +140,22 @@ namespace EquinoxsModUtils.Additions
 
             ApplyPatches();
 
-            ModUtils.GameDefinesLoaded += OnGameDefinesLoaded;
-            ModUtils.SaveStateLoaded += OnSaveStateLoaded;
-            ModUtils.GameSaved += OnGameSaved;
+            EMU.Events.GameDefinesLoaded += OnGameDefinesLoaded;
+            EMU.Events.SaveStateLoaded += OnSaveStateLoaded;
+            EMU.Events.GameSaved += OnGameSaved;
 
             Testing.DoTests();
 
             Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loaded.");
         }
 
-        private void Update() {
-            // ToDo: Delete If Not Needed
-        }
-
         // Events
 
-        private void OnGameDefinesLoaded(object sender, EventArgs e) {
+        private void OnGameDefinesLoaded() {
             UnlockAdder.AddRegisteredUnlocks();
 
             if (Testing.doMachineTest) {
-                ChestDefinition voidChestDefinition = (ChestDefinition)ModUtils.GetResourceInfoByName("Void Chest");
+                ChestDefinition voidChestDefinition = (ChestDefinition)EMU.Resources.GetResourceInfoByName("Void Chest");
                 voidChestDefinition.inventorySizes = new List<Vector2Int>() { new Vector2Int(1, 1) };
                 voidChestDefinition.invSizeOutput = new Vector2Int(1, 1);
             }

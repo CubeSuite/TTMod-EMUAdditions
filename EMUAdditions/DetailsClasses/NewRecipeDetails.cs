@@ -56,13 +56,13 @@ namespace EquinoxsModUtils.Additions
 
             for (int i = 0; i < ingredients.Count; i++) {
                 recipe.ingQuantities[i] = ingredients[i].quantity;
-                ResourceInfo ingredient = ModUtils.GetResourceInfoByNameUnsafe(ingredients[i].name);
+                ResourceInfo ingredient = EMU.Resources.GetResourceInfoByNameUnsafe(ingredients[i].name);
                 recipe.ingTypes[i] = ingredient;
             }
 
             for (int i = 0; i < outputs.Count; i++) {
                 recipe.outputQuantities[i] = outputs[i].quantity;
-                ResourceInfo output = ModUtils.GetResourceInfoByNameUnsafe(outputs[i].name);
+                ResourceInfo output = EMU.Resources.GetResourceInfoByNameUnsafe(outputs[i].name);
                 recipe.outputTypes[i] = output;
             }
 

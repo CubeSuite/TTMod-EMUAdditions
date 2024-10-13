@@ -91,6 +91,7 @@ namespace EquinoxsModUtils.Additions
         /// </summary>
         /// <typeparam name="T">MachineInstance derived class for the new machine</typeparam>
         /// <typeparam name="V">MachineDefinition derived class for the new machine</typeparam>
+        /// <param name="definition">Instance of a MachineDefinition derived class.</param>
         /// <param name="details">Container for the details of your new machine.</param>
         /// <param name="shouldLog">Whether an [EMUAdditions] Info message should be logged on success</param>
         public static void AddNewMachine<T, V>(MachineDefinition<T,V> definition, NewResourceDetails details, bool shouldLog = false) where T : struct, IMachineInstance<T, V> where V : MachineDefinition<T, V> {
@@ -120,7 +121,7 @@ namespace EquinoxsModUtils.Additions
             }
             
             T info = ScriptableObject.CreateInstance<T>();
-            ModUtils.SetPrivateField("_info", equipment, info);
+            EMU.SetPrivateField("_info", equipment, info);
             equipment.info.rawName = details.name;
 
             EquipmentAdder.equipmentToAdd.Add(equipment);
