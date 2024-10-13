@@ -200,6 +200,7 @@ namespace EquinoxsModUtils.Additions
             Harmony.CreateAndPatchAll(typeof(FlowManagerPatch));
             Harmony.CreateAndPatchAll(typeof(GameDefinesPatch));
             Harmony.CreateAndPatchAll(typeof(LocsUtilityPatch));
+            Harmony.CreateAndPatchAll(typeof(TechActivatedSystemMessage));
         }
 
         internal static void SaveIdHistory() {
