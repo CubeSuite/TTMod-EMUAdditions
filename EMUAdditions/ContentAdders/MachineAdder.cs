@@ -73,6 +73,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 if (machine.unlock != null) continue;
 
                 machine.unlock = EMU.Unlocks.GetUnlockByName(machineDetails.unlockName);
+                machine.unlock.GetUnlockState().unlockedResources.Add(machine);
             }
         }
 

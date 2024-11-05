@@ -1,4 +1,5 @@
-﻿using EquinoxsModUtils.Additions.ContentAdders;
+﻿using EquinoxsModUtils.Additions;
+using EquinoxsModUtils.Additions.ContentAdders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace EquinoxsModUtils.Additions
+namespace EquinoxsModUtils
 {
     public static partial class EMUAdditions
     {

@@ -9,8 +9,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using EquinoxsModUtils.Additions;
 
-namespace EquinoxsModUtils.Additions
+namespace EquinoxsModUtils
 {
     internal static class Testing 
     {
@@ -43,7 +44,7 @@ namespace EquinoxsModUtils.Additions
                     craftTierRequired = 0,
                     fuelAmount = 100f,
                     sortPriority = 10,
-                    unlockName = EMU.Names.Unlocks.BasicManufacturing,
+                    unlockName = EMU.Names.Unlocks.CoreComposer,
                 });
                 EMUAdditions.AddNewRecipe(new NewRecipeDetails() {
                     GUID = EMUAdditionsPlugin.MyGUID,
@@ -63,7 +64,7 @@ namespace EquinoxsModUtils.Additions
                         }
                     },
                     sortPriority = 10,
-                    unlockName = EMU.Names.Unlocks.BasicManufacturing
+                    unlockName = EMU.Names.Unlocks.CoreComposer
                 });
                 EMUAdditions.AddNewSchematicsSubHeader("Test Parts 2", "Intermediates", 10);
             }

@@ -141,8 +141,8 @@ namespace EquinoxsModUtils.Additions.ContentAdders
             }
 
             unlock.dependencies = dependencies;
-            if(dependencies.Count >= 1) unlock.dependency1 = dependencies[0];
-            if(dependencies.Count == 2) unlock.dependency2 = dependencies[1];
+            if (dependencies.Count >= 1) unlock.dependency1 = dependencies[0];
+            if (dependencies.Count == 2) unlock.dependency2 = dependencies[1];
             return true;
         }
 

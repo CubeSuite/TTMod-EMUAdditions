@@ -80,6 +80,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 if (resource.unlock != null) continue;
 
                 resource.unlock = EMU.Unlocks.GetUnlockByName(details.unlockName);
+                resource.unlock.GetUnlockState().unlockedResources.Add(resource);
             }
         }
 

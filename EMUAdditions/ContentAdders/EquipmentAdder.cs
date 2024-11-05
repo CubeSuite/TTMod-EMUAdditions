@@ -71,6 +71,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 if (info.unlock != null) continue;
 
                 info.unlock = EMU.Unlocks.GetUnlockByName(equipmentDetails.unlockName);
+                info.unlock.GetUnlockState().unlockedResources.Add(info);
             }
         }
 

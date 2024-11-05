@@ -9,7 +9,7 @@ using UnityEngine;
 using EquinoxsDebuggingTools;
 using EquinoxsModUtils.Additions;
 
-namespace EMUAdditions.Patches
+namespace EquinoxsModUtils.Additions.Patches
 {
     internal class TechActivatedSystemMessagePatch
     {

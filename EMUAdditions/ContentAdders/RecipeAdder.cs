@@ -64,6 +64,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
                 if (recipe == null || recipe.unlock != null) continue;
 
                 recipe.unlock = EMU.Unlocks.GetUnlockByName(details.unlockName);
+                recipe.unlock.GetUnlockState().unlockedRecipes.Add(recipe);
             }
         }
 

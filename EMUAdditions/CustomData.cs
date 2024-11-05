@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TriangleNet;
 
-namespace EquinoxsModUtils.Additions
+namespace EquinoxsModUtils
 {
     public static partial class EMUAdditions 
     {
@@ -23,13 +24,11 @@ namespace EquinoxsModUtils.Additions
             // Public Functions
 
             /// <summary>
-            /// Adds a custom member for an instance of a machine if it has not already been added. See repo README for explanation.
+            /// Deprecated. Use Update() instead.
             /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="instanceId">The instanceId of the target machine.</param>
-            /// <param name="name">The name of the new member.</param>
-            /// <param name="value">The value of the new member.</param>
             public static void Add<T>(uint instanceId, string name, T value) {
+                EMUAdditionsPlugin.Log.LogWarning($"EMUAdditions.CustomData.Add() is deprecated, switch to Update() - Calling mod: {Assembly.GetCallingAssembly()}");
+
                 List<string> acceptableTypes = new List<string>() {
                     typeof(uint).ToString(),
                     typeof(int).ToString(),
@@ -71,12 +70,6 @@ namespace EquinoxsModUtils.Additions
                 }
 
                 string key = $"{instanceId}-{name}-{typeof(T)}";
-                if (!customMachineData.ContainsKey(key)) {
-                    EMUAdditionsPlugin.Log.LogWarning($"Custom data with key '{key}' has not been added for machine yet, adding instead of updating.");
-                    Add(instanceId, name, value);
-                    return;
-                }
-
                 customMachineData[key] = value;
             }
 
