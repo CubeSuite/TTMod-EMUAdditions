@@ -15,19 +15,19 @@ namespace EquinoxsModUtils
 {
     internal static class Testing 
     {
-        internal static bool doUnlockTest = false;
+        internal static bool doUnlockTest = true;
         internal static bool doResourcePlusTest = false;
         internal static bool doMachineTest = false;
 
         internal static void DoTests() {
             if (doUnlockTest) {
                 EMUAdditions.AddNewUnlock(new NewUnlockDetails() {
-                    displayName = "Test Unlock 3",
-                    description = "Third new test unlock",
+                    displayName = "My New Unlock",
+                    description = "Description of my new Unlock",
                     category = Unlock.TechCategory.Terraforming,
                     requiredTier = TechTreeState.ResearchTier.Tier2,
                     coreTypeNeeded = ResearchCoreDefinition.CoreType.Purple,
-                    coreCountNeeded = 3,
+                    coreCountNeeded = 20,
                     treePosition = 10,
                 });
             }
@@ -154,6 +154,18 @@ namespace EquinoxsModUtils
 
         private void OnGameDefinesLoaded() {
             UnlockAdder.AddRegisteredUnlocks();
+
+            if (Testing.doUnlockTest) {
+                Unlock myUnlock = EMU.Unlocks.GetUnlockByName("My New Unlock");
+                Unlock excavatorBit = EMU.Unlocks.GetUnlockByName(EMU.Names.Unlocks.ExcavatorBitMKI);
+                Unlock bricks = EMU.Unlocks.GetUnlockByName(EMU.Names.Unlocks.BasicPowderBricks);
+
+                myUnlock.requiredTier = excavatorBit.requiredTier;
+                myUnlock.treePosition = bricks.treePosition;
+
+                ResourceInfo limestone = EMU.Resources.GetResourceInfoByName(EMU.Names.Resources.Limestone);
+                myUnlock.sprite = limestone.rawSprite;
+            }
 
             if (Testing.doMachineTest) {
                 ChestDefinition voidChestDefinition = (ChestDefinition)EMU.Resources.GetResourceInfoByName("Void Chest");
