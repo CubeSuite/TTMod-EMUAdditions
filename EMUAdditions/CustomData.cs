@@ -27,6 +27,12 @@ namespace EquinoxsModUtils
             /// Deprecated. Use Update() instead.
             /// </summary>
             public static void Add<T>(uint instanceId, string name, T value) {
+                if (!hasCustomMachineDataLoaded) {
+                    EMUAdditionsPlugin.Log.LogError($"GetAll() called before custom data has loaded.");
+                    EMUAdditionsPlugin.Log.LogInfo($"Try using the SaveStateLoaded event or hasSaveStateLoaded variable");
+                    return;
+                }
+
                 EMUAdditionsPlugin.Log.LogWarning($"EMUAdditions.CustomData.Add() is deprecated, switch to Update() - Calling mod: {Assembly.GetCallingAssembly()}");
 
                 List<string> acceptableTypes = new List<string>() {
@@ -56,6 +62,12 @@ namespace EquinoxsModUtils
             /// <param name="name">The name of the new member.</param>
             /// <param name="value">The value of the new member.</param>
             public static void Update<T>(uint instanceId, string name, T value) {
+                if (!hasCustomMachineDataLoaded) {
+                    EMUAdditionsPlugin.Log.LogError($"GetAll() called before custom data has loaded.");
+                    EMUAdditionsPlugin.Log.LogInfo($"Try using the SaveStateLoaded event or hasSaveStateLoaded variable");
+                    return;
+                }
+
                 List<string> acceptableTypes = new List<string>() {
                     typeof(uint).ToString(),
                     typeof(int).ToString(),
@@ -82,7 +94,7 @@ namespace EquinoxsModUtils
             /// <returns>The value of the new member if successful, default(T) otherwise.</returns>
             public static T Get<T>(uint instanceId, string name) {
                 if (!hasCustomMachineDataLoaded) {
-                    EMUAdditionsPlugin.Log.LogError($"GetCustomDataForMachine() called before custom data has loaded.");
+                    EMUAdditionsPlugin.Log.LogError($"Get() called before custom data has loaded.");
                     EMUAdditionsPlugin.Log.LogInfo($"Try using the SaveStateLoaded event or hasSaveStateLoaded variable");
                     return default;
                 }
@@ -108,6 +120,27 @@ namespace EquinoxsModUtils
                     EMUAdditionsPlugin.Log.LogError($"Could not find custom data with key '{key}'");
                     return default;
                 }
+            }
+
+            /// <summary>
+            /// Get all custom data members for an instance of a machine.
+            /// </summary>
+            /// <param name="instanceId">The machine to get all custom members for</param>
+            /// <returns>A dictionary with field names for keys</returns>
+            public static Dictionary<string, object>GetAll(uint instanceId) {
+                if (!hasCustomMachineDataLoaded) {
+                    EMUAdditionsPlugin.Log.LogError($"GetAll() called before custom data has loaded.");
+                    EMUAdditionsPlugin.Log.LogInfo($"Try using the SaveStateLoaded event or hasSaveStateLoaded variable");
+                    return default;
+                }
+
+                Dictionary<string, object> results = new Dictionary<string, object>();
+                foreach(KeyValuePair<string, object> pair in customMachineData) {
+                    if (!pair.Key.StartsWith(instanceId.ToString())) continue;
+                    results.Add(pair.Key.Split('-')[1], pair.Value);
+                }
+
+                return results;
             }
 
             /// <summary>

@@ -15,7 +15,7 @@ namespace EquinoxsModUtils
 {
     internal static class Testing 
     {
-        internal static bool doUnlockTest = true;
+        internal static bool doUnlockTest = false;
         internal static bool doResourcePlusTest = false;
         internal static bool doMachineTest = false;
 
@@ -117,7 +117,7 @@ namespace EquinoxsModUtils
         // Plugin Settings
         internal const string MyGUID = "com.equinox.EMUAdditions";
         private const string PluginName = "EMUAdditions";
-        private const string VersionString = "2.0.0";
+        private const string VersionString = "2.0.1";
 
         private static readonly Harmony Harmony = new Harmony(MyGUID);
         internal static ManualLogSource Log = new ManualLogSource(PluginName);
@@ -164,7 +164,7 @@ namespace EquinoxsModUtils
                 myUnlock.treePosition = bricks.treePosition;
 
                 ResourceInfo limestone = EMU.Resources.GetResourceInfoByName(EMU.Names.Resources.Limestone);
-                myUnlock.sprite = limestone.rawSprite;
+                myUnlock.sprite = EMU.Images.LoadSpriteFromFile("EMUAdditions.Images.VoidChest.png");
             }
 
             if (Testing.doMachineTest) {
