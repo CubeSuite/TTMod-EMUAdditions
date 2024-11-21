@@ -16,6 +16,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
         internal static List<NewRecipeDetails> recipesToAdd = new List<NewRecipeDetails>();
         internal static Dictionary<string, int> idHistory = new Dictionary<string, int>();
         private static string dataFolder => EMUAdditionsPlugin.dataFolder;
+        private static List<SchematicsRecipeData> addedRecipes = new List<SchematicsRecipeData>();
 
         // Internal Functions
 
@@ -65,6 +66,8 @@ namespace EquinoxsModUtils.Additions.ContentAdders
 
                 recipe.unlock = EMU.Unlocks.GetUnlockByName(details.unlockName);
                 recipe.unlock.GetUnlockState().unlockedRecipes.Add(recipe);
+                TechTreeState.instance.knownRecipes.Remove(recipe);
+                TechTreeState.instance.knownRecipesArray[recipe.uniqueId] = false;
             }
         }
 
@@ -72,6 +75,7 @@ namespace EquinoxsModUtils.Additions.ContentAdders
 
         private static void AddRecipeToGame(NewRecipeDetails details, ref SchematicsRecipeData recipe) {
             GameDefines.instance.schematicsRecipeEntries.Add(recipe);
+            addedRecipes.Add(recipe);
         }
 
         private static int GetNewRecipeID() {

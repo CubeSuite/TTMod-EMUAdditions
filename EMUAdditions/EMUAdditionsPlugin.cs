@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using EquinoxsModUtils.Additions;
+using System.Linq;
 
 namespace EquinoxsModUtils
 {
@@ -143,6 +144,7 @@ namespace EquinoxsModUtils
 
             EMU.Events.GameDefinesLoaded += OnGameDefinesLoaded;
             EMU.Events.SaveStateLoaded += OnSaveStateLoaded;
+            EMU.Events.TechTreeStateLoaded += OnTechTreeStateLoaded;
             EMU.Events.GameSaved += OnGameSaved;
 
             Testing.DoTests();
@@ -179,6 +181,10 @@ namespace EquinoxsModUtils
             RecipeAdder.FetchUnlocks();
             ResourceAdder.FetchUnlocks();
             MachineAdder.FetchUnlocks();
+        }
+
+        private void OnTechTreeStateLoaded() {
+            TechTreeState.instance.RefreshKnownResources();
         }
 
         private void OnGameSaved(object sender, EventArgs e) {
